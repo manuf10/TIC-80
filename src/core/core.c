@@ -546,6 +546,8 @@ void tic_core_close(tic_mem* memory)
 
 void tic_core_tick_start(tic_mem* memory)
 {
+    memory->debug_instr_executed = 0;
+    memory->debug_instr_executed = 0;
     tic_core* core = (tic_core*)memory;
     tic_core_sound_tick_start(memory);
     tic_core_tick_io(memory);
@@ -564,6 +566,19 @@ void tic_core_tick_start(tic_mem* memory)
 
 void tic_core_tick_end(tic_mem* memory)
 {
+    {
+        char buf[32];
+        snprintf(buf, sizeof(buf), "Total:%d", memory->debug_instr_executed);
+        tic_api_print_with_background(memory, buf, 1, 1, 12, 0);
+    }
+
+    {
+        char buf[32];
+        size_t mem_used_kb = memory->debug_memory_usage_bytes >> 10;
+        snprintf(buf, sizeof(buf), "KBs:%d", mem_used_kb);
+        tic_api_print_with_background(memory, buf, 1, 8, 12, 0);
+    }
+
     tic_core* core = (tic_core*)memory;
     tic80_input* input = &core->memory.ram->input;
 

@@ -28,6 +28,16 @@
 #include <lualib.h>
 #include <ctype.h>
 
+#define INSTR_LIMIT_PER_FRAME 160000
+#define INSTR_EXECUTED_PER_HOOK_CALLBACK 800
+#define KILL_ON_INSTR_EXCEEDED 0
+
+typedef struct 
+{
+    uint64_t instr_executed; 
+    tic_mem* mem;
+} lua_debug_info;
+
 extern bool parse_note(const char* noteStr, s32* note, s32* octave);
 
 static inline s32 getLuaNumber(lua_State* lua, s32 index)
@@ -1702,6 +1712,21 @@ static s32 docall (lua_State *lua, s32 narg, s32 nres)
     return status;
 }
 
+static void frame_hook(lua_State* lua, lua_Debug* ar) 
+{
+    lua_debug_info* state = lua_getextraspace(lua);
+    state->instr_executed  += INSTR_EXECUTED_PER_HOOK_CALLBACK;
+    tic_mem* mem = state->mem;
+    if (mem) {
+        mem->debug_instr_executed = state->instr_executed;
+    }
+#if KILL_ON_INSTR_EXCEEDED
+    if (state->instr_executed > INSTR_LIMIT_PER_FRAME) {
+        luaL_error(lua, "Script exceeded instruction limit for this frame");
+    }
+#endif
+}
+
 void luaapi_tick(tic_mem* tic)
 {
     tic_core* core = (tic_core*)tic;
@@ -1710,15 +1735,21 @@ void luaapi_tick(tic_mem* tic)
 
     if(lua)
     {
+        lua_debug_info* state = lua_getextraspace(lua);
+        state->instr_executed = 0;
+        state->mem = tic;
+        lua_sethook(lua, frame_hook, LUA_MASKCOUNT, INSTR_EXECUTED_PER_HOOK_CALLBACK); 
+
         lua_getglobal(lua, TIC_FN);
         if(lua_isfunction(lua, -1))
         {
             if(docall(lua, 0, 0) != LUA_OK)
             {
                 core->data->error(core->data->data, lua_tostring(lua, -1));
+                lua_sethook(lua, NULL, 0, 0);
                 return;
             }
-
+    
 #if defined(BUILD_DEPRECATED)
             // call OVR() callback for backward compatibility
             {
@@ -1740,6 +1771,8 @@ void luaapi_tick(tic_mem* tic)
             lua_pop(lua, 1);
             core->data->error(core->data->data, "'function TIC()...' isn't found :(");
         }
+
+        lua_sethook(lua, NULL, 0, 0);
     }
 }
 

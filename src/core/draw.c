@@ -1012,6 +1012,16 @@ void tic_api_paint(tic_mem* memory, s32 x, s32 y, u8 color, u8 bordercolor)
     floodFill((tic_core*)memory, x, y, mapColor(memory, color), bordercolor);
 }
 
+void tic_api_print_with_background(tic_mem* memory, char *txt, s32 x, s32 y, u8 textColor, u8 bgColor)
+{
+    size_t length = strlen(txt);
+    s32 width = length * 6;
+    s32 height = 6;
+
+    tic_api_rect(memory, x, y, width, height, bgColor);
+    tic_api_print(memory, txt, x, y, textColor, true, 1, false);
+}
+
 #if defined(BUILD_DEPRECATED)
 #include "draw_dep.c"
 #endif

@@ -29,13 +29,92 @@
 #include <lualib.h>
 #include <ctype.h>
 
+#define USE_LUA_CUSTOM_ALLOCATOR 1
+
+typedef struct 
+{
+    size_t memory_usage_bytes;
+    tic_mem* tic;
+} mem_tracker;
+
+mem_tracker tracker;
+
+typedef struct 
+{
+    size_t size;
+} mem_block_header;
+
+static void *l_alloc (void *ud, void *ptr, size_t osize, size_t nsize) 
+{
+    (void)ud; (void)osize;  /* not used */
+    
+    if (osize > (1 << 30))
+        osize = 0;
+        
+    mem_tracker* pTracker = (mem_tracker*)ud;
+    tic_mem* mem = pTracker->tic;
+  
+    if (nsize == 0) 
+    {
+        if (ptr)
+        {
+            mem_block_header *hdr = (mem_block_header *)ptr - 1;
+            pTracker->memory_usage_bytes -= hdr->size;
+            free(hdr);
+        }
+
+        if (mem)
+            mem->debug_memory_usage_bytes = pTracker->memory_usage_bytes;
+        
+        return NULL;
+    }
+    else 
+    {
+        // Block shrinking
+        size_t old_size = 0;
+        if (ptr) {
+            mem_block_header *hdr = (mem_block_header *)ptr - 1;
+            old_size = hdr->size;
+        }
+
+        mem_block_header *newhdr = realloc(ptr ? ((mem_block_header *)ptr - 1) : NULL,
+                                      nsize + sizeof(mem_block_header));
+        
+        if (!newhdr) 
+            return NULL;
+
+        newhdr->size = nsize;
+        pTracker->memory_usage_bytes += (nsize - old_size);
+        
+        if (mem) {
+            mem->debug_memory_usage_bytes = pTracker->memory_usage_bytes;
+        }
+
+        return (void *)(newhdr + 1);
+    }
+}
+
+static int panic(lua_State* lua) {
+    const char* msg = lua_tostring(lua, -1);
+    fprintf(stderr, "PANIC: unprotected error: %s\n", msg);
+    return 0;
+}
+
 static bool initLua(tic_mem* tic, const char* code)
 {
     tic_core* core = (tic_core*)tic;
+    tracker.tic = tic;
 
     luaapi_close(tic);
 
-    lua_State* lua = core->currentVM = luaL_newstate();
+    #if USE_LUA_CUSTOM_ALLOCATOR
+        lua_State* lua = core->currentVM = lua_newstate(l_alloc, &tracker);
+        if (lua)
+            lua_atpanic(lua, &panic);
+    #else
+        lua_State* lua = core->currentVM = luaL_newstate();
+    #endif
+    
     luaapi_open(lua);
 
     luaapi_init(core);

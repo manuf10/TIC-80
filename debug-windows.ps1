@@ -108,7 +108,12 @@ $cmakeCommand = "cmake $CMAKE_GENERATOR " +
                 "$DEBUG_FLAGS " +
                 "$COMPILER_FLAGS " +
                 "$STATIC_FLAG " +
-                "-DBUILD_WITH_ALL=On " +
+                "-DBUILD_PLAYER=ON " +
+                "-DBUILD_SDL=ON " +
+                "-DBUILD_STATIC=ON " +
+                "-DBUILD_TOOLS=OFF " +
+                "-DBUILD_WITH_ALL=Off " +
+                "-DBUILD_WITH_Lua=On " +
                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=On " +
                 "-DCMAKE_POLICY_VERSION_MINIMUM=3.5 " +
                 ".."

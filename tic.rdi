@@ -1,0 +1,155 @@
+// raddbg 0.9.20 project file
+
+recent_file: path: "src/api/lua.c"
+recent_file: path: "vendor/lua/lapi.c"
+recent_file: path: "src/api/luaapi.c"
+recent_file: path: "src/studio/screens/surf.c"
+recent_file: path: "src/studio/studio.c"
+recent_file: path: "src/studio/fs.c"
+recent_file: path: "src/studio/net.c"
+recent_file: path: "src/core/core.c"
+recent_file: path: "src/tic.c"
+recent_file: path: "src/system/sdl/main.c"
+recent_file: path: "src/system/sdl/player.c"
+recent_file: path: "D:/os/obj/amd64fre/minkernel/crts/ucrt/src/appcrt/heap/xmt/objfre/amd64/minkernel/crts/ucrt/src/appcrt/heap/debug_heap.cpp"
+recent_file: path: "src/script.c"
+recent_file: path: "src/cart.c"
+recent_file: path: "D:/a/_work/1/s/src/vctools/crt/vcruntime/src/string/amd64/memset.asm"
+recent_file: path: "vendor/lua/lauxlib.c"
+recent_file: path: "src/studio/screens/run.c"
+recent_file: path: "vendor/lua/ltable.c"
+recent_file: path: "vendor/lua/ldo.c"
+recent_file: path: "src/core/io.c"
+recent_file: path: "vendor/sdl-gpu/src/sdl_gpu.c"
+recent_file: path: "vendor/sdl-gpu/src/renderer_gl_common.inl"
+recent_file: path: "build/bin/tic80.exe"
+recent_file: path: "src/system/libretro/tic80_libretro.c"
+target:
+{
+  executable: "build/bin/tic80.exe"
+  working_directory: "build/bin"
+  enabled: 1
+}
+target:
+{
+  executable: "build/bin/SDL2.dll"
+  working_directory: "build/bin"
+}
+breakpoint:
+{
+  source_location: "src/tic.c:67:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:513:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/system/sdl/player.c:83:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/system/sdl/main.c:1897:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:718:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:724:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:735:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:738:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/system/sdl/player.c:92:1"
+  hit_count: 0
+  enabled: 0
+}
+target:
+{
+  executable: "build/bin/player-sdl.exe"
+  working_directory: "build/bin/"
+  enabled: 0
+  arguments: "tetris.tic"
+}
+breakpoint:
+{
+  source_location: "src/studio/screens/run.c:101:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/api/luaapi.c:1732:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:549:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/tic.c:106:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:440:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:475:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/core/core.c:404:1"
+  hit_count: 0
+  enabled: 0
+}
+breakpoint:
+{
+  source_location: "src/studio/screens/surf.c:247:1"
+  hit_count: 0
+}
+breakpoint:
+{
+  source_location: "src/studio/fs.c:402:1"
+  hit_count: 0
+}
+breakpoint:
+{
+  source_location: "src/studio/screens/surf.c:440:1"
+  hit_count: 0
+}

@@ -857,6 +857,9 @@ struct tic_mem
 
         u8 data;
     } input;
+
+    uint64_t debug_instr_executed;
+    size_t debug_memory_usage_bytes;
 };
 
 tic_mem* tic_core_create(s32 samplerate, tic80_pixel_color_format format);
